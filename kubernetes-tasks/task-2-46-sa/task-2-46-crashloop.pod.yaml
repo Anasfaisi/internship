@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: task-2-46-test-crashloop
+  namespace: anas-c
+spec:
+  restartPolicy: Always
+  containers:
+  - name: crashing-container
+    image: busybox:latest
+    command: ["/bin/sh", "-c", "echo 'Error: application configuration missing!'; exit 1"]

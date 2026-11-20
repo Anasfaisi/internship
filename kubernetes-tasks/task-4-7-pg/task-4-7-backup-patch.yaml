@@ -1,0 +1,18 @@
+spec:
+  backup:
+    retentionPolicy: "7d"
+    barmanObjectStore:
+      destinationPath: s3://task-4-7-anas-c-pg/task-4-7-pg
+      endpointURL: https://s3.us-east-1.amazonaws.com
+      s3Credentials:
+        accessKeyId:
+          name: task-4-7-backup
+          key: ACCESS_KEY_ID
+        secretAccessKey:
+          name: task-4-7-backup
+          key: ACCESS_SECRET_KEY
+      wal:
+        compression: gzip
+      data:
+        compression: gzip
+        immediateCheckpoint: true

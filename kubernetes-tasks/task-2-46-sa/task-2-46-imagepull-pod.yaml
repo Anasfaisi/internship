@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: task-2-46-test-imagepull
+  namespace: anas-c
+spec:
+  containers:
+  - name: bad-image-container
+    image: nginx:non-existent-tag-99999
+    imagePullPolicy: Always

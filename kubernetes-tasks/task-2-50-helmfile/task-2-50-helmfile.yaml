@@ -1,0 +1,22 @@
+# task-2-50-helmfile.yaml
+
+kubeContext: kubenine-intern
+
+# releases: list of Helm charts to deploy
+# Each entry = one "helm upgrade --install" under the hood
+releases:
+  - name: task-2-50-release               # Helm release name
+    namespace: anas-c                      # Target namespace
+    chart: ../task-2-49-helm/task-2-49-chart   # Path to local chart (relative to this file)
+    values:
+      - ../task-2-49-helm/task-2-49-chart/values.yaml   # Base values
+    set:
+      - name: replicaCount
+        value: 1
+   # Release 2: Uses the task-2-48 chart
+  - name: task-2-50-release-48
+    namespace: anas-c
+    chart: ../task-2-48-helm/task-2-48-app
+    set:
+      - name: replicaCount
+        value: 3

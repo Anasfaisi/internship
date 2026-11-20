@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: task-2-51-anas-cluster-issuer
+spec:
+  acme:
+    email: anasofficial008@gmail.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: task-2-51-anas-letsencrypt-key
+    solvers:
+      - dns01:
+          cloudflare:
+            apiTokenSecretRef:
+              name: task-2-51-anas-cf-token
+              key: api-token

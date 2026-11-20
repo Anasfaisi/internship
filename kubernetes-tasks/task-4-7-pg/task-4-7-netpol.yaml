@@ -1,0 +1,39 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: task-4-7-pg-allow
+  namespace: anas-c
+  labels:
+    task: task-4-7
+spec:
+  podSelector:
+    matchLabels:
+      cnpg.io/cluster: task-4-7-pg
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              cnpg.io/cluster: task-4-7-pg
+      ports:
+        - port: 5432
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: cnpg-system
+      ports:
+        - port: 5432
+        - port: 8000
+    - from:
+        - podSelector:
+            matchLabels:
+              role: db-client
+      ports:
+        - port: 5432
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 9187

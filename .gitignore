@@ -1,0 +1,29 @@
+# Terraform local state and provider cache
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+*.tfvars
+*.tfvars.json
+
+# Keys and local cluster credentials
+*.pem
+*.key
+.kube/
+kubeconfig
+.kubeconfig
+.env
+.env.*
+
+# Downloaded CLI installers, not task source
+aws/
+*.tar.gz
+*.tgz
+linux-amd64/
+tfplan
+*.tfplan

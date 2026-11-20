@@ -1,0 +1,14 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: task-4-7-pg-daily
+  namespace: anas-c
+  labels:
+    task: task-4-7
+spec:
+  schedule: "0 0 2 * * *"
+  immediate: true
+  backupOwnerReference: cluster
+  cluster:
+    name: task-4-7-pg
+

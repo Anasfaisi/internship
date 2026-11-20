@@ -1,0 +1,49 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: task-4-7-pg
+  namespace: anas-c
+  labels:
+    release: prometheus-stack
+    task: task-4-7
+spec:
+  selector:
+    matchLabels:
+      cnpg.io/cluster: task-4-7-pg
+  podMetricsEndpoints:
+    - port: metrics
+      interval: 30s  
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: task-4-7-pg
+  namespace: anas-c
+  labels:
+    release: prometheus-stack
+    task: task-4-7
+spec:
+  groups:
+    - name: task-4-7-pg
+      rules:
+        - alert: Task47ReplicationLag
+          expr: cnpg_pg_replication_lag{namespace="anas-c"} > 30
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: A replica is more than 30 seconds behind the primary
+        - alert: Task47DiskFilling
+          expr: (kubelet_volume_stats_available_bytes{namespace="anas-c",persistentvolumeclaim=~"task-4-7-pg-.+"} / kubelet_volume_stats_capacity_bytes{namespace="anas-c",persistentvolumeclaim=~"task-4-7-pg-.+"}) < 0.2
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: A Postgres disk has less than 20 percent free
+        - alert: Task47BackupStale
+          expr: absent(cnpg_collector_last_available_backup_timestamp{namespace="anas-c"}) or (time() - cnpg_collector_last_available_backup_timestamp{namespace="anas-c"} > 86400)
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: No successful backup in the last 24 hours

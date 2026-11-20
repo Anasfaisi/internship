@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-2-44-deployment
+  namespace: anas-c
+  labels:
+    app: task-2-44
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: task-2-44
+  template:
+    metadata:
+      labels:
+        app: task-2-44
+    spec:
+      containers:
+      - name: probe-container
+        image: busybox:1.36
+        command:
+        - /bin/sh
+        - -c
+        - |
+          touch /tmp/healthy /tmp/ready
+          sleep 3600
+        # Readiness Probe: checks if /tmp/ready exists
+        readinessProbe:
+          exec:
+            command:
+            - test
+            - -f
+            - /tmp/ready
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          failureThreshold: 2
+        # Liveness Probe: checks if /tmp/healthy exists
+        livenessProbe:
+          exec:
+            command:
+            - test
+            - -f
+            - /tmp/healthy
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          failureThreshold: 2

@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-2-39-deployment
+  namespace: anas-c
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: task-2-39
+  template:
+    metadata:
+      labels:
+        app: task-2-39
+    spec:
+      containers:
+        - name: app
+          image: nginx:1.27
+          ports:
+            - containerPort: 80

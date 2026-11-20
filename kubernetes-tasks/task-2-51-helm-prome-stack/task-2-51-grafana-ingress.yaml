@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: task-2-51-grafana-ingress
+  namespace: anas-c
+spec:
+  ingressClassName: task-2-51-anas-nginx
+  tls:
+    - hosts:
+        - grafana.anasdev.space
+      secretName: task-2-51-tls
+  rules:
+    - host: grafana.anasdev.space
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: task-2-51-anas-grafana
+                port:
+                  number: 80

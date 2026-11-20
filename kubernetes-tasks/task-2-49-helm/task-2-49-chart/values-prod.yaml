@@ -1,0 +1,12 @@
+replicaCount: 2
+
+image:
+  tag: "1.26.0"
+
+config:
+  appEnv: "production"
+  logLevel: "warn"
+  welcomeMessage: "Welcome to Production!"
+
+ingress:
+  host: myapp-prod.example.com

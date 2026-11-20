@@ -1,0 +1,157 @@
+helmDefaults:
+  kubeContext: kubenine-intern
+  wait: true
+  timeout: 900
+
+repositories:
+  - name: ingress-nginx
+    url: https://kubernetes.github.io/ingress-nginx
+  - name: jetstack
+    url: https://charts.jetstack.io
+  - name: prometheus-community
+    url: https://prometheus-community.github.io/helm-charts
+  - name: grafana
+    url: https://grafana.github.io/helm-charts
+
+releases:
+  - name: ingress-nginx
+    namespace: anas-c
+    kubeContext: kubenine-intern
+    chart: ingress-nginx/ingress-nginx
+    version: 4.15.1
+    values:
+      - fullnameOverride: task-2-51-anas-ingress-nginx
+        controller:
+          electionID: task-2-51-anas-ingress-leader
+          ingressClass: task-2-51-anas-nginx
+          ingressClassResource:
+            name: task-2-51-anas-nginx
+            enabled: true
+            default: false
+            controllerValue: k8s.io/task-2-51-anas-ingress-nginx
+          scope:
+            enabled: true
+            namespace: anas-c
+          service:
+            type: LoadBalancer
+
+  - name: cert-manager
+    namespace: anas-c
+    kubeContext: kubenine-intern
+    installed: false
+    chart: jetstack/cert-manager
+
+  - name: prometheus-stack
+    namespace: anas-c
+    kubeContext: kubenine-intern
+    chart: prometheus-community/kube-prometheus-stack
+    version: 93.2.2
+    needs:
+      - ingress-nginx
+    values:
+      - fullnameOverride: task-2-51-anas-prom
+        crds:
+          enabled: false
+        defaultRules:
+          create: false
+        kubeApiServer:
+          enabled: true
+        kubelet:
+          enabled: false
+        kubeControllerManager:
+          enabled: false
+        coreDns:
+          enabled: false
+        kubeDns:
+          enabled: false
+        kubeEtcd:
+          enabled: false
+        kubeProxy:
+          enabled: false
+        kubeScheduler:
+          enabled: false
+        kubeStateMetrics:
+          enabled: true
+        kube-state-metrics:
+          fullnameOverride: task-2-51-anas-kube-state-metrics
+        nodeExporter:
+          enabled: true
+        prometheus-node-exporter:
+          fullnameOverride: task-2-51-anas-node-exporter
+          hostNetwork: false
+          hostPID: false
+          hostRootFsMount:
+            enabled: false
+        prometheusOperator:
+          extraArgs:
+            - --controller-id=task-2-51-anas
+          namespaces:
+            releaseNamespace: true
+          prometheusInstanceNamespaces:
+            - anas-c
+          alertmanagerInstanceNamespaces:
+            - anas-c
+          alertmanagerConfigNamespaces:
+            - anas-c
+          thanosRulerInstanceNamespaces:
+            - anas-c
+          kubeletService:
+            enabled: false
+        prometheus:
+          annotations:
+            operator.prometheus.io/controller-id: task-2-51-anas
+          prometheusSpec:
+            replicas: 1
+            retention: 1d
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 1536Mi
+            serviceMonitorNamespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: anas-c
+            podMonitorNamespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: anas-c
+            probeNamespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: anas-c
+            scrapeConfigNamespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: anas-c
+            storageSpec:
+              volumeClaimTemplate:
+                spec:
+                  storageClassName: task-2-51-anas-storage
+                  accessModes: ["ReadWriteOnce"]
+                  resources:
+                    requests:
+                      storage: 8Gi
+        grafana:
+          fullnameOverride: task-2-51-anas-grafana
+          adminPassword: prom-operator
+          persistence:
+            enabled: true
+            storageClassName: task-2-51-anas-storage
+            size: 2Gi
+        alertmanager:
+          enabled: false
+
+  - name: loki-stack
+    namespace: anas-c
+    kubeContext: kubenine-intern
+    chart: grafana/loki-stack
+    version: 2.10.3
+    needs:
+      - prometheus-stack
+    values:
+      - fullnameOverride: task-2-51-anas-loki
+        promtail:
+          fullnameOverride: task-2-51-anas-promtail
+        loki:
+          persistence:
+            enabled: true
+            storageClassName: task-2-51-anas-storage
+            size: 5Gi

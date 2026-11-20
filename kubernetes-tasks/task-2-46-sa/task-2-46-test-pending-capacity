@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: task-2-46-test-pending-capacity
+  namespace: anas-c
+spec:
+  containers:
+  - name: resource-hungry
+    image: busybox:latest
+    command: ["sleep", "3600"]
+    resources:
+      requests:
+        cpu: "500"        # Requests 500 CPU cores
+        memory: "1024Gi"   # Requests 1 Terabyte of RAM

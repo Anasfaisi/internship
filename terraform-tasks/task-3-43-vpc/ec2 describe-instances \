@@ -1,0 +1,44 @@
+{
+    "Subnets": [
+        {
+            "AvailabilityZoneId": "aps1-az1",
+            "MapCustomerOwnedIpOnLaunch": false,
+            "OwnerId": "450690783103",
+            "AssignIpv6AddressOnCreation": false,
+            "Ipv6CidrBlockAssociationSet": [],
+            "Tags": [
+                {
+                    "Key": "Name",
+                    "Value": "task-3-43-public-subnet-1"
+                },
+                {
+                    "Key": "Environment",
+                    "Value": "learning"
+                },
+                {
+                    "Key": "Project",
+                    "Value": "task-3-43"
+                }
+            ],
+            "SubnetArn": "arn:aws:ec2:ap-south-1:450690783103:subnet/subnet-01844328dd90542d5",
+            "EnableDns64": false,
+            "Ipv6Native": false,
+            "PrivateDnsNameOptionsOnLaunch": {
+                "HostnameType": "ip-name",
+                "EnableResourceNameDnsARecord": false,
+                "EnableResourceNameDnsAAAARecord": false
+            },
+            "BlockPublicAccessStates": {
+                "InternetGatewayBlockMode": "off"
+            },
+            "SubnetId": "subnet-01844328dd90542d5",
+            "State": "available",
+            "VpcId": "vpc-0a7a97552ba9abe7c",
+            "CidrBlock": "10.0.1.0/24",
+            "AvailableIpAddressCount": 250,
+            "AvailabilityZone": "ap-south-1a",
+            "DefaultForAz": false,
+            "MapPublicIpOnLaunch": false
+        }
+    ]
+}

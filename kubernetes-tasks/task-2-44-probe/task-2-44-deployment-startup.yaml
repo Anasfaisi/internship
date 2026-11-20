@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-2-44-deployment
+  namespace: anas-c
+  labels:
+    app: task-2-44
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: task-2-44
+  template:
+    metadata:
+      labels:
+        app: task-2-44
+    spec:
+      containers:
+      - name: probe-container
+        image: busybox:1.36
+        command:
+        - /bin/sh
+        - -c
+        - |
+          # Simulate slow startup of 15 seconds
+          sleep 15
+          touch /tmp/started /tmp/healthy /tmp/ready
+          sleep 3600
+        # Startup Probe: checks if /tmp/started exists
+        startupProbe:
+          exec:
+            command:
+            - test
+            - -f
+            - /tmp/started
+          periodSeconds: 3
+          failureThreshold: 10
+        # Readiness Probe
+        readinessProbe:
+          exec:
+            command:
+            - test
+            - -f
+            - /tmp/ready
+          periodSeconds: 5
+          failureThreshold: 2
+        # Liveness Probe
+        livenessProbe:
+          exec:
+            command:
+            - test
+            - -f
+            - /tmp/healthy
+          periodSeconds: 5
+          failureThreshold: 2

@@ -1,0 +1,30 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: task-4-7-pg-pitr
+  namespace: anas-c
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:18.7-system-trixie
+  storage:
+    size: 1Gi
+  bootstrap:
+    recovery:
+      source: origin
+      recoveryTarget:
+        targetTime: "2026-11-19T13:20:01Z"
+  externalClusters:
+    - name: origin
+      barmanObjectStore:
+        destinationPath: s3://task-4-7-anas-c-pg/task-4-7-pg
+        endpointURL: https://s3.us-east-1.amazonaws.com
+        s3Credentials:
+          accessKeyId:
+            name: task-4-7-backup
+            key: ACCESS_KEY_ID
+          secretAccessKey:
+            name: task-4-7-backup
+            key: ACCESS_SECRET_KEY
+        wal:
+          compression: gzip
+        serverName: task-4-7-pg
