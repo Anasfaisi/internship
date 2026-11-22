@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata: 
+  name: x-config
+  namespace: statusboard
+data: 
+  STATUS_BODY: 
+    status: 200
+    env: dev 
+  index.html: |
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Status Board</title>
+        <style>
+          body {
+            display: grid;
+            min-height: 100vh;
+            place-items: center;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #ffffff;
+          }
+          .card {
+            padding: 2rem 3rem;
+            border-radius: 12px;
+            background: #1e293b;
+            text-align: center;
+          }
+        </style>
+      </head>
+      <body>
+        <main class="card">
+          <h1>`${STATUS_BODY.dev}`</h1>
+          <p>DevOps Engineer</p>
+        </main>
+      </body>
+    </html>

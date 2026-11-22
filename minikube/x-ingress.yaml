@@ -1,0 +1,16 @@
+apiVersion: 
+kind: 
+metadata: 
+  name: 
+  namespace: 
+spec: 
+  - host: example.com 
+    http: 
+      paths:
+        - path: /
+          patchtype: Prefix
+          backend: 
+            service: 
+              name: dummy-ingress 
+              port:
+                number: 80 

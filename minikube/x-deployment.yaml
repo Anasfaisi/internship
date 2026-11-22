@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: x-deployment
+  namespace: statusboard
+  labels:
+    app: status-board
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: status-board
+  template:
+    metadata:
+      labels:
+        app: status-board
+    spec:
+      containers:
+        - name: status-board
+          image: nginx:1.27-alpine
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+          volumeMounts:
+            - name: webpage
+              mountPath: /usr/share/nginx/html/index.html
+              subPath: index.html
+        - name: probe-container
+          image: busybox:1.36
+          command:
+            - /bin/sh
+            - -c
+            - |
+              touch /tmp/healthy /tmp/ready
+              sleep 3600
+          readinessProbe:
+            exec:
+              command:
+                - test
+                - -f
+                - /tmp/ready
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 2
+          livenessProbe:
+            exec:
+              command:
+                - test
+                - -f
+                - /tmp/healthy
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 2
+      volumes:
+        - name: webpage
+          configMap:
+            name: x-config
