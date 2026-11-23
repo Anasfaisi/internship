@@ -60,11 +60,7 @@ Working set per pod. This is a gauge, so no `rate()`.
 Data source: Prometheus. Visualization: Time series. Unit: short. Legend: `{{pod}}`.
 
 ```promql
-sum by (pod) (
-  increase(
-    kube_pod_container_status_restarts_total{namespace="$namespace"}[1h]
-  )
-)
+4
 ```
 
 Restarts over the previous hour, per pod. `increase()` estimates the counter rise and can be fractional. Yellow at 1, red at 5.
